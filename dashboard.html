@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini SIEM Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Mini SIEM Dashboard</h1>
+
+        <div class="cards">
+
+            <div class="card info">
+                <h2>INFO</h2>
+                <p>{{ infos }}</p>
+            </div>
+
+            <div class="card warning">
+                <h2>WARNING</h2>
+                <p>{{ warnings }}</p>
+            </div>
+
+            <div class="card error">
+                <h2>ERROR</h2>
+                <p>{{ errors }}</p>
+            </div>
+
+        </div>
+
+        <div class="chart-container">
+            <canvas id="logChart"></canvas>
+        </div>
+
+        <h2>Logs</h2>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Level</th>
+                <th>Message</th>
+            </tr>
+
+            {% for log in logs %}
+            <tr>
+                <td>{{ log[0] }}</td>
+                <td>{{ log[1] }}</td>
+                <td>{{ log[2] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+<script>
+
+const ctx = document.getElementById('logChart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['INFO', 'WARNING', 'ERROR'],
+        datasets: [{
+            label: 'Log Count',
+            data: [{{ infos }}, {{ warnings }}, {{ errors }}],
+            borderWidth: 1
+        }]
+    },
+
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+</script>
+
+</body>
+</html>
